@@ -1,0 +1,11 @@
+.env
+*.pyc
+__pycache__/
+db.sqlite3
+*.log
+*.pot
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
