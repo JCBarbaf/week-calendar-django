@@ -30,6 +30,7 @@ class Subject(models.Model):
     subject_name = models.CharField(max_length=255)
     subject_code = models.CharField(max_length=5)
     subject_color = models.CharField(max_length=7, help_text="hex color code")
+    subject_white_text = models.BooleanField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Juan Carlos Barba">
+  <title>Calendario semanal</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'week_calendar/style/style.css' %}">
+  <script type="module" src="{% static 'week_calendar/scripts/app.js' %}"></script> 
+  <link rel="shortcut icon" href="{% static 'week_calendar/images/icon.svg' %}" type="image/x-icon">
+</head>
+<body>
+    <div class="app-container">
+      <header class="app-header">
+        <h1>Calendario semanal</h1>
+        <div class="week-control">
+          <button class="arrow-button" data-action="prior" title="Anterior"><</button>
+          <input type="date" name="calendar" class="date-input" title="Elegir fecha">
+          <button class="arrow-button" data-action="next" title="Siguiente">></button>
+        </div>
+      </header>
+      <main class="app-main">
+        <table class="calendar">
+          <tr>
+            <th>
+              <h2>Lunes</h2>
+              <p class="day-date"></p>
+            </th>
+            <th>
+              <h2>Martes</h2>
+              <p class="day-date"></p>
+            </th>
+            <th>
+              <h2>Miercoles</h2>
+              <p class="day-date"></p>
+            </th>
+            <th>
+              <h2>Jueves</h2>
+              <p class="day-date"></p>
+            </th>
+            <th>
+              <h2>Viernes</h2>
+              <p class="day-date"></p>
+            </th>
+          </tr>
+          <tr class="content-row">
+            <td class="day"><div class="day-content-container"></div></td>
+            <td class="day"><div class="day-content-container"></div></td>
+            <td class="day"><div class="day-content-container"></div></td>
+            <td class="day"><div class="day-content-container"></div></td>
+            <td class="day"><div class="day-content-container"></div></td>
+          </tr>
+          <tr class="content-row"></tr>
+            <td class="add-button" title="Añadir evento">+</td>
+            <td class="add-button" title="Añadir evento">+</td>
+            <td class="add-button" title="Añadir evento">+</td>
+            <td class="add-button" title="Añadir evento">+</td>
+            <td class="add-button" title="Añadir evento">+</td>
+          </tr>
+        </table>
+      </main>
+    </div>
+    <div class="modal-background events">
+      <div class="modal">
+        <header class="modal-header">
+          <h2>Crear nuevo evento</h2>
+          <button class="close-button">X</button>
+        </header>
+        <main class="modal-main">
+          <form class="event-form">
+            <input type="hidden" name="id">
+            <div class="form-row">
+              <div class="form-element">
+                <label for="eventName">Nombre del evento:</label>
+                <input type="text" name="eventName" id="eventName" placeholder="Nombre del evento" required maxlength="255">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-element">
+                <label for="eventSubject">Asignatura:</label>
+                <select name="eventSubject" id="eventSubject" required>
+                  <option value="" selected disabled>-Asignatura-</option>
+                  <option value="mat">Matemáticas</option>
+                  <option value="bio">Biología</option>
+                  <option value="fyq">Física y química</option>
+                  <option value="gyh">Geografía e historia</option>
+                  <option value="cast">Castellano</option>
+                  <option value="cat">Catalán</option>
+                  <option value="ing">Inglés</option>
+                  <option value="ef">Edicación física</option>
+                  <option value="dig">Digitalización</option>
+                  <option value="val">Valores</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+              <div class="form-element">
+                <label for="eventDate">Fecha:</label>
+                <input type="date" name="eventDate" id="eventDate" required>
+              </div>
+              <div class="form-element">
+                <label for="eventTime">Hora:</label>
+                <input type="time" name="eventTime" id="eventTime" value="08:00" required>
+              </div>
+            </div>
+            <div class="button-container">
+              <button class="submit-event">Crear</button>
+            </div>
+          </form>
+        </main>
+      </div>
+    </div>
+    <div class="modal-background delete">
+      <div class="modal">
+        <header class="modal-header">
+          <h2>¿Quieres borrar el evento?</h2>
+          <button class="close-button">X</button>
+        </header>
+        <main class="modal-main">
+          <div class="delete-choice">
+            <button class="confirm-delete">Sí</button>
+            <button class="cancel-delete">No</button>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
