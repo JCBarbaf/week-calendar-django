@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
+from django.contrib import admin
 
 # Create your models here.
 
@@ -50,6 +51,10 @@ class Event(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
+
+    @admin.display(
+        ordering="event_date"
+    )
 
     def __str__(self):
         return self.event_name

@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{% static 'week_calendar/style/style.css' %}">
   <script type="module" src="{% static 'week_calendar/scripts/app.js' %}"></script> 
   <link rel="shortcut icon" href="{% static 'week_calendar/images/icon.svg' %}" type="image/x-icon">
+  <link rel="stylesheet" href="{% url 'subjects_css' %}">
 </head>
 <body>
     <div class="app-container">
@@ -81,17 +82,9 @@
                 <label for="eventSubject">Asignatura:</label>
                 <select name="eventSubject" id="eventSubject" required>
                   <option value="" selected disabled>-Asignatura-</option>
-                  <option value="mat">Matemáticas</option>
-                  <option value="bio">Biología</option>
-                  <option value="fyq">Física y química</option>
-                  <option value="gyh">Geografía e historia</option>
-                  <option value="cast">Castellano</option>
-                  <option value="cat">Catalán</option>
-                  <option value="ing">Inglés</option>
-                  <option value="ef">Edicación física</option>
-                  <option value="dig">Digitalización</option>
-                  <option value="val">Valores</option>
-                  <option value="otro">Otro</option>
+                  {% for subject in subjects %}
+                      <option value="{{ subject.subject_code}}">{{ subject.subject_name }}</option>
+                  {% endfor %}
                 </select>
               </div>
               <div class="form-element">
