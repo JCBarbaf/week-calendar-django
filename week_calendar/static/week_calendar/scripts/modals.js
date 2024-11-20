@@ -1,3 +1,6 @@
+import { SetDates } from "./week-handler.js"
+import { DeleteEvent } from "./event-handler.js"
+
 const modals = document.querySelectorAll('.modal-background')
 const eventsModal = document.querySelector('.modal-background.events')
 const form = document.querySelector('.event-form')
@@ -16,8 +19,7 @@ modals.forEach(modal => {
       form.reset()
       modal.classList.remove('active')
     } else if (event.target.closest('.confirm-delete')) {
-      let db = await openDatabase('EventDB')
-      deleteEvent(db, parseInt(event.target.closest('.confirm-delete').dataset.eventId))
+      await DeleteEvent()
       event.target.closest('.confirm-delete').dataset.eventId = null
       SetDates(document.querySelector('.date-input').value)
       event.target.closest('.modal-background').classList.remove('active')

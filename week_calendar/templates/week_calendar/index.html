@@ -114,7 +114,7 @@
         <main class="modal-main">
           <form class="delete-form" method="post" action="{% url 'delete_event' %}">
             {% csrf_token %}
-            <input type="hidden" name="id">
+            <input class="delete-input" type="hidden" name="id">
           </form>
           <div class="delete-choice">
             <button class="confirm-delete">Sí</button>

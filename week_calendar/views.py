@@ -24,7 +24,7 @@ def get_events_in_range(request):
     if not start_date or not end_date:
         return JsonResponse({'error: Invalid date format'}, status=400)
 
-    events = Event.objects.filter(event_date__range=(start_date, end_date))
+    events = Event.objects.filter(event_date__range=(start_date, end_date), deleted_at__isnull=True)
 
     event_data = [
         {
