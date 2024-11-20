@@ -3,7 +3,6 @@ const dateInput = document.querySelector('.date-input')
 const datePs = document.querySelectorAll('.day-date')
 const dayContainers = document.querySelectorAll('.day-content-container')
 const addButtons = document.querySelectorAll('.add-button')
-const deleteModal = document.querySelector('.modal-background.delete')
 const today = new Date()
 today.setUTCHours(0, 0, 0, 0)
 dateInput.value = today.toISOString().split('T')[0]
@@ -33,7 +32,7 @@ dateInput.addEventListener('change', (event) => {
   }
 })
 
-async function SetDates(date) {
+export async function SetDates(date) {
   const week = GetWeek(date)
   
   for (let i = 0; i < datePs.length; i++) {

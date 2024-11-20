@@ -69,8 +69,10 @@
           <button class="close-button">X</button>
         </header>
         <main class="modal-main">
-          <form class="event-form">
+          <form class="event-form" method="post" action="{% url 'save_event' %}">
+            {% csrf_token %}
             <input type="hidden" name="id">
+            <input type="hidden" name="user" value="jcbarbaf@gmail.com">
             <div class="form-row">
               <div class="form-element">
                 <label for="eventName">Nombre del evento:</label>
@@ -110,6 +112,10 @@
           <button class="close-button">X</button>
         </header>
         <main class="modal-main">
+          <form class="delete-form" method="post" action="{% url 'delete_event' %}">
+            {% csrf_token %}
+            <input type="hidden" name="id">
+          </form>
           <div class="delete-choice">
             <button class="confirm-delete">Sí</button>
             <button class="cancel-delete">No</button>

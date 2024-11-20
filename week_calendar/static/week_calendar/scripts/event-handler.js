@@ -1,5 +1,8 @@
+import { SetDates } from "./week-handler.js"
+
 const calendar = document.querySelector('.calendar')
 const eventsModal = document.querySelector('.modal-background.events')
+const deleteModal = document.querySelector('.modal-background.delete')
 
 calendar.addEventListener('click', async (event) => {
   if (event.target.closest('.edit-button')) {
@@ -29,7 +32,6 @@ async function EditEvent(eventID) {
     eventDate: new Date(data.event.event_date).toISOString().split('T')[0],
     eventTime: new Date(data.event.event_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   }
-  console.log(eventData)
   for (const [key, value] of Object.entries(eventData)) {
     document.querySelector(`[name="${key}"]`).value = value
   }
@@ -37,28 +39,29 @@ async function EditEvent(eventID) {
 }
 
 
-// const eventForm = document.querySelector('.event-form')
-// eventForm.addEventListener('submit', async (event) => {
-//   event.preventDefault()
-//   const eventData = new FormData(eventForm)
-//   let data = {}
-//   for (const [key, value] of eventData.entries()) {
-//     data[key] = value
-//   }
-//   let db = await openDatabase('EventDB')
-//   data.id = parseInt(data.id)
-//   if (data.id && data.id != '') {
-//     await editData(db, data.id, data)
-//   } else {
-//     delete data.id
-//     await writeData(db, data)
-//   }
-//   SetDates(document.querySelector('.date-input').value)
-//   document.querySelector('.modal-background.events').classList.remove('active')
-//   document.querySelector('[name="id"]').value = null
-//   eventForm.reset()
-// })
-
+const eventForm = document.querySelector('.event-form')
+eventForm.addEventListener('submit', async (event) => {
+  event.preventDefault()
+  const eventData = new FormData(eventForm)
+  try {
+    const response = await fetch('/save-event/', {
+      method: 'POST',
+      body: eventData,
+    })
+    if (response.status === 200) {
+      SetDates(document.querySelector('.date-input').value)
+      document.querySelector('.modal-background.events').classList.remove('active')
+      document.querySelector('[name="id"]').value = null
+      eventForm.reset()
+    } else {
+      const errorData = await response.json()
+      console.log('Error message:', errorData.error)
+    }
+  } catch (error) {
+    console.error('Network or server error:', error)
+  }
+})
+  
 // function openDatabase(dbName, version = 1) {
 //   return new Promise((resolve, reject) => {
 //     let request = indexedDB.open(dbName, version)

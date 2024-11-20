@@ -5,5 +5,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path('events-in-range/', views.get_events_in_range, name='get_events_in_range'),
     path('event/', views.get_event_by_id, name='get_event_by_id'),
+    path('save-event/', views.save_event, name='save_event'),
+    path('delete-event/', views.delete_event, name='delete_event'),
     path('subjects-css/', views.subjects_css, name='subjects_css')
 ]

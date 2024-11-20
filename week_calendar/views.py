@@ -5,8 +5,11 @@ from django.http import JsonResponse
 from django.shortcuts import get_list_or_404
 from django.utils.dateparse import parse_datetime
 from datetime import datetime, timedelta
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_http_methods
+import json
 
-from .models import Event, Subject
+from .models import Event, Subject, User
 
 # Create your views here.
 def index(request):
@@ -49,6 +52,71 @@ def get_event_by_id(request):
         'user': event.user.email
     }
     return JsonResponse({'event': event_data}, status=200)
+
+@csrf_protect
+@require_http_methods(["POST"])
+def save_event(request):
+    try:
+        event_id = request.POST.get('id')
+        event_name = request.POST.get('eventName')
+        event_date = request.POST.get('eventDate')
+        event_time = request.POST.get('eventTime')
+        subject_code = request.POST.get('eventSubject')
+        user_email = request.POST.get('user')
+
+        if not all([event_name, event_date, event_time, subject_code, user_email]):
+            return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+        try:
+            event_datetime = parse_datetime(f"{event_date}T{event_time}")
+        except ValueError:
+            return JsonResponse({'error': 'Invalid date or time format'}, status=400)
+
+        try:
+            subject = Subject.objects.get(subject_code=subject_code)
+        except Subject.DoesNotExist:
+            return JsonResponse({'error': 'Subject not found'}, status=404)
+        
+        try:
+            user = User.objects.get(email=user_email)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+
+        if event_id:
+            try:
+                event = Event.objects.get(id=event_id)
+                event.event_name = event_name
+                event.event_date = event_datetime
+                event.subject = subject
+                event.save()
+                message = "Event updated successfully"
+            except Event.DoesNotExist:
+                return JsonResponse({'error': 'Event not found'}, status=404)
+        else:
+            Event.objects.create(
+                event_name=event_name,
+                event_date=event_datetime,
+                subject=subject,
+                user=user
+            )
+            message = "Event created successfully"
+
+        return JsonResponse({'message': message})
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return JsonResponse({'error': 'Internal server error'}, status=500)
+    
+@csrf_protect
+@require_http_methods(["POST"])
+def delete_event(request):
+    try:
+        event_id = request.POST.get('id')
+        event = Event.objects.get(id=event_id)
+        event.deleted_at = datetime.now()
+        event.save()
+        return JsonResponse({'message': 'Event updated successfully'})
+    except Event.DoesNotExist:
+        return JsonResponse({'error': 'Event not found'}, status=404)
 
 def subjects_css(request):
     subjects = Subject.objects.all()
