@@ -2,30 +2,31 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from django.contrib import admin
+from django.contrib.auth.models import User
 
 # Create your models here.
 
-class User(models.Model):
-    email = models.EmailField()
-    password = models.CharField(max_length=128)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
+# class User(models.Model):
+#     email = models.EmailField()
+#     password = models.CharField(max_length=128)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     deleted_at = models.DateTimeField(null=True, blank=True)
 
-    def __str__(self):
-        return self.email
+#     def __str__(self):
+#         return self.email
     
-    def set_password(self, raw_password):
-        self.password = make_password(raw_password)
+#     def set_password(self, raw_password):
+#         self.password = make_password(raw_password)
 
-    def save(self, *args, **kwargs):
-        if not self.password.startswith('pbkdf2_'):
-            self.password = make_password(self.password)
-        super().save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         if not self.password.startswith('pbkdf2_'):
+#             self.password = make_password(self.password)
+#         super().save(*args, **kwargs)
 
-    def delete(self, *args, **kwargs):
-        self.deleted_at = timezone.now()
-        self.save()
+#     def delete(self, *args, **kwargs):
+#         self.deleted_at = timezone.now()
+#         self.save()
 
 class Subject(models.Model):
     subject_name = models.CharField(max_length=255)
