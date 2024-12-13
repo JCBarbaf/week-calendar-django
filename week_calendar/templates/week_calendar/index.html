@@ -6,6 +6,7 @@
   <meta name="author" content="Juan Carlos Barba">
   <title>Calendario semanal</title>
   {% load static %}
+  <link rel="stylesheet" href="{% static 'week_calendar/style/base.css' %}">
   <link rel="stylesheet" href="{% static 'week_calendar/style/style.css' %}">
   <script type="module" src="{% static 'week_calendar/scripts/app.js' %}"></script> 
   <link rel="shortcut icon" href="{% static 'week_calendar/images/icon.svg' %}" type="image/x-icon">
@@ -20,6 +21,7 @@
           <input type="date" name="calendar" class="date-input" title="Elegir fecha">
           <button class="arrow-button" data-action="next" title="Siguiente">></button>
         </div>
+        <a href="{% url 'logout' %}">Logout</a>
       </header>
       <main class="app-main">
         <table class="calendar">

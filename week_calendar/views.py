@@ -7,11 +7,15 @@ from django.utils.dateparse import parse_datetime
 from datetime import datetime, timedelta
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
+from .forms import CustomAuthenticationForm
 import json
 
 from .models import Event, Subject, User
 
 # Create your views here.
+@login_required
 def index(request):
     subjects = Subject.objects.all()
     context = {'subjects': subjects}
@@ -122,3 +126,6 @@ def subjects_css(request):
     subjects = Subject.objects.all()
     context = {'subjects': subjects}
     return render(request, 'week_calendar/subjects.css', context, content_type='text/css')
+
+class CustomLoginView(LoginView):
+    authentication_form = CustomAuthenticationForm
