@@ -2,7 +2,7 @@ import { SetDates } from "./week-handler.js"
 
 const calendar = document.querySelector('.calendar')
 const eventsModal = document.querySelector('.modal-background.events')
-const deleteModal = document.querySelector('.modal-background.delete')
+const deleteModal = document.querySelector('.modal-background.delete-event')
 
 calendar.addEventListener('click', async (event) => {
   if (event.target.closest('.edit-button')) {
@@ -61,7 +61,7 @@ async function EditEvent(eventID) {
   eventsModal.classList.add('active')
 }
 export async function DeleteEvent() {
-  const deleteData = new FormData(document.querySelector('.delete-form'))
+  const deleteData = new FormData(document.querySelector('.delete-event .delete-form'))
   try {
     const response = await fetch('/delete-event/', {
       method: 'POST',

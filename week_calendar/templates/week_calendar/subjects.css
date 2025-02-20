@@ -1,7 +1,7 @@
 {# dynamic_css.css #}
 {% for subject in subjects %}
 .{{ subject.subject_code }} {
-  background-color: #{{ subject.subject_color }};
+  background-color: {{ subject.subject_color }};
   color: {% if subject.subject_white_text %}#e6e6fa{% else %}#000014{% endif %};
   --svg-color: {% if subject.subject_white_text %}#e6e6fa{% else %}#000014{% endif %};
 }

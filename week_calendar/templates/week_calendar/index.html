@@ -10,18 +10,22 @@
   <link rel="stylesheet" href="{% static 'week_calendar/style/style.css' %}">
   <script type="module" src="{% static 'week_calendar/scripts/app.js' %}"></script> 
   <link rel="shortcut icon" href="{% static 'week_calendar/images/icon.svg' %}" type="image/x-icon">
-  <link rel="stylesheet" href="{% url 'subjects_css' %}">
+  <link rel="stylesheet" href="{% url 'subjects_css' %}" class="subjects-css">
 </head>
 <body>
     <div class="app-container">
       <header class="app-header">
         <h1>Calendario semanal</h1>
-        <div class="week-control">
-          <button class="arrow-button" data-action="prior" title="Anterior"><</button>
-          <input type="date" name="calendar" class="date-input" title="Elegir fecha">
-          <button class="arrow-button" data-action="next" title="Siguiente">></button>
+        <div class="options-control-container">
+            <div class="week-control">
+              <button class="arrow-button" data-action="prior" title="Anterior"><</button>
+              <input type="date" name="calendar" class="date-input" title="Elegir fecha">
+              <button class="arrow-button" data-action="next" title="Siguiente">></button>
+            </div>
+            <button class="options-button">
+                <img class="options-icon" src="{% static 'week_calendar/images/options-icon.svg' %}">
+            </button>
         </div>
-        <a href="{% url 'logout' %}">Logout</a>
       </header>
       <main class="app-main">
         <table class="calendar">
@@ -64,6 +68,24 @@
         </table>
       </main>
     </div>
+    <div class="options-menu-background">
+        <div class="options-menu-container">
+            <header class="options-header">
+                <h3>Opciones</h3>
+            </header>
+            <main class="options-main">
+                <ul class="options-menu">
+                    <li class="options-menu-item subjects-button">Asignaturas</li>
+                    <li class="options-menu-item">
+                        <form id="logout-form" method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="logout-button">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </main>
+        </div>
+    </div>
     <div class="modal-background events">
       <div class="modal">
         <header class="modal-header">
@@ -74,7 +96,6 @@
           <form class="event-form" method="post" action="{% url 'save_event' %}">
             {% csrf_token %}
             <input type="hidden" name="id">
-            <input type="hidden" name="user" value="jcbarbaf@gmail.com">
             <div class="form-row">
               <div class="form-element">
                 <label for="eventName">Nombre del evento:</label>
@@ -87,7 +108,7 @@
                 <select name="eventSubject" id="eventSubject" required>
                   <option value="" selected disabled>-Asignatura-</option>
                   {% for subject in subjects %}
-                      <option value="{{ subject.subject_code}}">{{ subject.subject_name }}</option>
+                      <option value="{{ subject.id}}">{{ subject.subject_name }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -107,7 +128,7 @@
         </main>
       </div>
     </div>
-    <div class="modal-background delete">
+    <div class="modal-background delete-event">
       <div class="modal">
         <header class="modal-header">
           <h2>¿Quieres borrar el evento?</h2>
@@ -125,5 +146,46 @@
         </main>
       </div>
     </div>
+    <div class="modal-background subjects">
+        <div class="modal">
+          <header class="modal-header">
+            <h2>Asignaturas</h2>
+            <button class="close-button">X</button>
+          </header>
+          <main class="modal-main">
+            <div class="subjects-list-container">
+                <ul class="subjects-list"></ul>
+                <div class="add-subject-button-container">
+                    <button class="add-subject-button">+</button>
+                </div>
+                <div class="csrf-token-item">
+                    {% csrf_token %}
+                </div>
+            </div>
+          </main>
+        </div>
+    </div>
+    <div class="modal-background delete-subject">
+        <div class="modal">
+          <header class="modal-header">
+            <svg class="warning-icon" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M277.061 54.9022C264.812 33.6992 234.188 33.6993 221.939 54.9023L14.3112 414.293C2.06179 435.496 17.3736 462 41.8724 462H457.128C481.626 462 496.938 435.496 484.689 414.293L277.061 54.9022ZM279.143 165C285.41 165 290.375 170.297 289.978 176.558L280.5 326.015C280.137 331.739 275.394 336.196 269.666 336.196H230.334C224.606 336.196 219.863 331.739 219.5 326.015L210.022 176.558C209.625 170.297 214.59 165 220.857 165H279.143ZM250.271 422C231.535 422 216.346 406.792 216.346 388.033C216.346 369.273 231.535 354.065 250.271 354.065C269.008 354.065 284.197 369.273 284.197 388.033C284.197 406.792 269.008 422 250.271 422Z" fill="#990000"/>
+            </svg>
+            <button class="close-button">X</button>
+        </header>
+        <main class="modal-main">
+            <h2 class="question">¿Estás seguro de que quieres borrar <span class="subject-name"></span>?</h2>
+            <h3 class="question-info">Tambien se borrarán <span class="events-number"></span> eventos</h3>
+            <form class="delete-form" method="post" action="{% url 'delete_subject' %}">
+              {% csrf_token %}
+              <input class="delete-input" type="hidden" name="id">
+            </form>
+            <div class="delete-choice">
+              <button class="confirm-delete">Sí</button>
+              <button class="cancel-delete">No</button>
+            </div>
+          </main>
+        </div>
+      </div>
   </body>
 </html>
