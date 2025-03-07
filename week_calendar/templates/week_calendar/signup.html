@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Juan Carlos Barba">
+  <title>Crear usuario - Calendario semanal</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'week_calendar/style/base.css' %}">
+  <link rel="stylesheet" href="{% static 'week_calendar/style/signup.css' %}">
+  <link rel="shortcut icon" href="{% static 'week_calendar/images/icon.svg' %}" type="image/x-icon">
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup">
+            <header class="signup-header">
+                <h1>Nuevo usuario</h1>
+                <img class="logo" src="{% static 'week_calendar/images/logo-white.svg' %}" alt="calendar-logo" title="Calendar Logo">
+            </header>
+            <main class="signup-main">
+                <form class="signup-form" method="post" autocomplete="off">
+                    <div class="signup-form-data">
+                        {% if form.errors %}
+                            <ul class="signup-errors">
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li class="signup-error">
+                                            <img class="error-icon" src="{% static 'week_calendar/images/error-icon.svg' %}">
+                                            <p>{{ error }}</p>
+                                        </li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_username" class="form-icon">
+                                <img class="label-icon" src="{% static 'week_calendar/images/user-icon.svg' %}" alt="user-icon" title="Usuario">
+                            </label>
+                            {{ form.email }}
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="form-icon">
+                                <img class="label-icon" src="{% static 'week_calendar/images/password-icon.svg' %}" alt="password-icon" title="Contraseña">
+                            </label>
+                            {{ form.password }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_username" class="form-icon">
+                                <img class="label-icon" src="{% static 'week_calendar/images/password-icon.svg' %}" alt="password-icon" title="Contraseña">
+                            </label>
+                            {{ form.repeat_password }}
+                        </div>
+                    </div>
+                    <div class="signup-form-buttons">
+                        <button class="signup-button">Registrarse</button>
+                        <p class="login-link">¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión.</a></p>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

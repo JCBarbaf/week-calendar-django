@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from django.http import JsonResponse
@@ -9,12 +9,20 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-from .forms import CustomAuthenticationForm
+from django.contrib.auth import login
+from . import forms
+from .predefined_subjects import predefined_subjects
+from django.contrib.auth.forms import UserCreationForm
 import json
 
 from .models import Event, Subject, User
 
 # Create your views here.
+class CustomLoginView(LoginView):
+    authentication_form = forms.CustomAuthenticationForm
+    def get_success_url(self):
+        return self.get_redirect_url() or '/'
+
 @login_required
 def index(request):
     user_id = request.user.id
@@ -24,18 +32,42 @@ def index(request):
     context = {'subjects': subjects}
     return render(request, "week_calendar/index.html", context)
 
+def signup(request):
+    if request.method == "POST":
+        form = forms.CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            for subject in predefined_subjects:
+                Subject.objects.create(
+                    subject_name=subject["name"],
+                    subject_code=subject["code"],
+                    subject_color=subject["color"],
+                    subject_white_text=subject["white_text"],
+                    user=user,
+                )
+            login(request, user)
+            return redirect("login")
+        else:
+            return render(request, "week_calendar/signup.html", {"form": form})
+    
+    else:
+        form = forms.CustomUserCreationForm()
+        return render(request, "week_calendar/signup.html", {"form": form})
+
 @login_required
 def get_current_user(request):
     return JsonResponse({'user_id': request.user.id, 'username': request.user.username})
 
+@login_required
 def get_events_in_range(request):
     start_date = parse_datetime(request.GET.get('start_date'))
     end_date = parse_datetime(request.GET.get('end_date')) + timedelta(days=1) - timedelta(seconds=1)
 
     if not start_date or not end_date:
-        return JsonResponse({'error: Invalid date format'}, status=400)
+        return JsonResponse({'error': 'Invalid date format'}, status=400)
 
-    events = Event.objects.filter(event_date__range=(start_date, end_date), deleted_at__isnull=True)
+    user = request.user
+    events = Event.objects.filter(event_date__range=(start_date, end_date), user=user, deleted_at__isnull=True)
 
     event_data = [
         {
@@ -53,7 +85,7 @@ def get_events_in_range(request):
 def get_event_by_id(request):
     event_id = request.GET.get('id')
     if not event_id:
-        return JsonResponse({'error: No ID provided'}, status=400)
+        return JsonResponse({'error': 'No ID provided'}, status=400)
     event = Event.objects.get(id=event_id)
     event_data = {
         'id': event.id,
@@ -134,8 +166,6 @@ def subjects_css(request):
     context = {'subjects': subjects}
     return render(request, 'week_calendar/subjects.css', context, content_type='text/css')
 
-class CustomLoginView(LoginView):
-    authentication_form = CustomAuthenticationForm
 
 @login_required
 def create_subject(request):
@@ -199,7 +229,7 @@ def get_subjects_by_user(request):
 
     user_id = request.GET.get('user_id')
     if not user_id:
-        return JsonResponse({'error: No user provided'}, status=400)
+        return JsonResponse({'error': 'No user provided'}, status=400)
 
     subjects = Subject.objects.filter(user=user_id, deleted_at__isnull=True).order_by('id')
 
@@ -220,7 +250,7 @@ def get_number_of_events(request):
 
     subject_id = request.GET.get('subject_id')
     if not subject_id:
-        return JsonResponse({'error: No subject provided'}, status=400)
+        return JsonResponse({'error': 'No subject provided'}, status=400)
 
     events_number = Event.objects.filter(subject_id=subject_id, deleted_at__isnull=True).count()
 

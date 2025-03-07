@@ -21,10 +21,10 @@
                 {% if form.errors %}
                     <div class="login-error">
                         <img class="error-icon" src="{% static 'week_calendar/images/error-icon.svg' %}">
-                        <p>Invalid username or password</p>
+                        <p>Usuario o contraseña incorrectos</p>
                     </div>
                 {% endif %}
-                <form method="post" class="login-form">
+                <form class="login-form" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="id_username" class="form-icon">
@@ -34,14 +34,14 @@
                     </div>
                     <div class="form-group">
                         <label for="id_password" class="form-icon">
-                            <img class="label-icon" src="{% static 'week_calendar/images/password-icon.svg' %}" alt="user-icon" title="Usuario">
+                            <img class="label-icon" src="{% static 'week_calendar/images/password-icon.svg' %}" alt="password-icon" title="Contraseña">
                         </label>
                         {{ form.password }}
                     </div>
                     <p><a class="forgot-psswd-link" href="">Olvidé mi contraseña</a></p>
                     <div class="login-buttons">
                         <button type="submit" class="login-button">Login</button>
-                        <a class="signup-button">Sign up</a>
+                        <a class="signup-button" href="{% url 'signup' %}">Sign up</a>
                     </div>
                 </form>
             </main>

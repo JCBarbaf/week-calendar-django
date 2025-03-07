@@ -1,4 +1,4 @@
-.login-container {
+.signup-container {
     position: fixed;
     inset: 0;
     display: flex;
@@ -6,9 +6,9 @@
     align-items: center;
 }
 
-.login {
+.signup {
     width: 90%;
-    max-width: 30rem;
+    max-width: 50rem;
     border-radius: 1rem 1rem 0 0;
     overflow: hidden;
     box-shadow: 0.5rem 0.5rem 0 0 rgb(0,0,0,0.2);
@@ -18,7 +18,7 @@
     width: 5rem;
 }
 
-.login-header {
+.signup-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,12 +28,12 @@
     border-bottom: var(--border);
 }
 
-.login-main {
+.signup-main {
     padding: 2rem;
     background-color: var(--secondary-color);
 }
 
-.login-error {
+.signup-error {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -45,12 +45,21 @@
     width: 1.5rem;
 }
 
-.login-form {
+.signup-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+.signup-form-data{
+    flex: 2;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
     gap: 1rem;
+    padding-right: 2rem;
+    margin-right: 2rem;
+    border-right: 0.2rem solid rgb(0,0,0,0.2);
 }
 
 .form-group {
@@ -72,25 +81,45 @@
     }
 }
 
-.login-buttons {
+.signup-form-buttons {
+    flex: 1;
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     gap: 1rem;
 }
-
-.login-button, .signup-button {
-    flex: 1;
+.signup-button {
+    padding: 1rem 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem;
     background-color: var(--primary-color);
     color: var(--white);
-    border-radius: 0.25rem;
-    text-decoration: none;
+    border-radius: 5rem;
+    font-size: 1.5rem;
     cursor: pointer;
+    &::after {
+        display: block;
+        padding-left: 1rem;
+        content: "→";
+        transition: transform 0.1s ease-out;
+    }
     &:hover {
         filter: brightness(1.1);
+        &::after {
+            transform: translateX(0.5rem);
+        }
+    }
+}
+
+.login-link {
+    font-size: 0.8rem;
+    & a {
+        color: var(--primary-color);
+        text-decoration: none;
+        &:hover {
+            filter: brightness(1.5);
+        }
     }
 }

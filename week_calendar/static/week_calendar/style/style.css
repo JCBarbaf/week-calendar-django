@@ -240,6 +240,16 @@
     }
 }
 
+.logout-button {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    cursor: pointer;
+}
+
 .modal-background {
   position: fixed;
   inset: 0;
