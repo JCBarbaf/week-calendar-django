@@ -1,4 +1,4 @@
-.login-container {
+.request-reset-container {
     position: fixed;
     inset: 0;
     display: flex;
@@ -6,9 +6,9 @@
     align-items: center;
 }
 
-.login {
+.request-reset {
     width: 90%;
-    max-width: 30rem;
+    max-width: 40rem;
     border-radius: 1rem 1rem 0 0;
     overflow: hidden;
     box-shadow: 0.5rem 0.5rem 0 0 rgb(0,0,0,0.2);
@@ -18,7 +18,7 @@
     width: 5rem;
 }
 
-.login-header {
+.request-reset-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,29 +28,20 @@
     border-bottom: var(--border);
 }
 
-.login-main {
+.request-reset-main {
     padding: 2rem;
     background-color: var(--secondary-color);
 }
 
-.login-error {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 1rem;
-    color: var(--red);
-}
-
-.error-icon {
-    width: 1.5rem;
-}
-
-.login-form {
-    display: flex;
+.request-reset-form {
+    display: none;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
     gap: 1rem;
+    &.active {
+        display: flex;
+    }
 }
 
 .form-group {
@@ -63,22 +54,14 @@
     width: 3rem;
 }
 
-.forgot-psswd-link {
-    color: var(--primary-color);
-    text-decoration: none;
-    &:hover {
-        filter: brightness(1.5);
-    }
-}
-
-.login-buttons {
+.request-reset-buttons {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 1rem;
 }
 
-.login-button, .signup-button {
+.request-reset-button, .login-button {
     flex: 1;
     display: flex;
     justify-content: center;
@@ -94,25 +77,13 @@
     }
 }
 
-.visibility-psswd-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 0.25rem;
-    background-color: var(--lighter-primary-color);
-    cursor: pointer;
-    &:hover {
-        filter: brightness(1.1);
-    }
-    &.show .show {
-        display: block;
-    }
-    &.hide .hide {
+.email-sended {
+    display: none;
+    &.active {
         display: block;
     }
 }
 
-.visibility-psswd-icon {
-    width: 2rem;
-    display: none;
+.email-sended-message {
+    padding: 1rem 0;
 }

@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{% static 'week_calendar/style/base.css' %}">
   <link rel="stylesheet" href="{% static 'week_calendar/style/login.css' %}">
   <link rel="shortcut icon" href="{% static 'week_calendar/images/icon.svg' %}" type="image/x-icon">
+  <script type="module" src="{% static 'week_calendar/scripts/password-visibility.js' %}"></script>
 </head>
 <body>
     <div class="login-container">
@@ -37,11 +38,15 @@
                             <img class="label-icon" src="{% static 'week_calendar/images/password-icon.svg' %}" alt="password-icon" title="Contraseña">
                         </label>
                         {{ form.password }}
+                        <button class="visibility-psswd-button show">
+                            <img class="show visibility-psswd-icon" src="{% static 'week_calendar/images/show-icon.svg' %}" alt="show-psswd-icon" title="Mostrar contraseña">
+                            <img class="hide visibility-psswd-icon" src="{% static 'week_calendar/images/hide-icon.svg' %}" alt="hide-psswd-icon" title="Ocultar contraseña">
+                        </button>
                     </div>
-                    <p><a class="forgot-psswd-link" href="">Olvidé mi contraseña</a></p>
+                    <p><a class="forgot-psswd-link" href="{% url 'request_psswd_reset' %}">Olvidé mi contraseña</a></p>
                     <div class="login-buttons">
-                        <button type="submit" class="login-button">Login</button>
                         <a class="signup-button" href="{% url 'signup' %}">Sign up</a>
+                        <button type="submit" class="login-button">Login</button>
                     </div>
                 </form>
             </main>

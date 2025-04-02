@@ -1,3 +1,4 @@
+import secrets
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
@@ -5,6 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_list_or_404
 from django.utils.dateparse import parse_datetime
 from datetime import datetime, timedelta
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
@@ -15,11 +17,14 @@ from .predefined_subjects import predefined_subjects
 from django.contrib.auth.forms import UserCreationForm
 import json
 
-from .models import Event, Subject, User
+from django.contrib.auth.models import User
+from .models import Event, Subject, Password_Tokens
 
 # Create your views here.
 class CustomLoginView(LoginView):
+    template_name = "week_calendar/login.html"  # Explicitly set the template
     authentication_form = forms.CustomAuthenticationForm
+
     def get_success_url(self):
         return self.get_redirect_url() or '/'
 
@@ -53,6 +58,72 @@ def signup(request):
     else:
         form = forms.CustomUserCreationForm()
         return render(request, "week_calendar/signup.html", {"form": form})
+
+def reset_psswd(request):
+    token = request.GET.get("token")  
+
+    if not token:
+        return render(
+            request, 
+            "week_calendar/reset-psswd.html", 
+            {"token_error": "No token provided."}
+        )
+
+    try:
+        password_token = Password_Tokens.objects.get(token=token)
+        if timezone.now() > password_token.expiration_date:
+            return render(
+                request, 
+                "week_calendar/reset-psswd.html", 
+                {"token_error": "Token expired."}
+            )
+
+        user = password_token.user
+
+    except Password_Tokens.DoesNotExist:
+        return render(
+            request, 
+            "week_calendar/reset-psswd.html", 
+            {"token_error": "Invalid token."}
+        )
+
+    if request.method == "POST":
+        form = forms.CustomPasswordResetForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(user)
+            login(request, user)
+            return redirect("login")
+
+    else:
+        form = forms.CustomPasswordResetForm(initial={"user_id": user.id})
+
+    return render(request, "week_calendar/reset-psswd.html", {"form": form})
+
+def request_psswd_reset(request):
+    return render(request, "week_calendar/request-psswd-reset.html")
+
+@csrf_protect
+@require_http_methods(["POST"])
+def email_psswd_reset(request):
+    email = request.POST.get('email')
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return HttpResponse(status=204)
+
+    token = secrets.token_urlsafe(32)
+    while Password_Tokens.objects.filter(token=token).exists():
+        token = secrets.token_urlsafe(32)
+
+    Password_Tokens.objects.create(
+        user=user,
+        token=token,
+        expiration_date=datetime.now() + timedelta(hours=24),
+        created_at=datetime.now()
+    )
+    #ENVIAR MAIL AQUI
+    return HttpResponse(status=204)
 
 @login_required
 def get_current_user(request):
@@ -271,3 +342,17 @@ def delete_subject(request):
         return JsonResponse({'error': 'Event not found'}, status=404)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+def get_user_id_by_token(request):
+    print('hola')
+    token = request.GET.get('token')
+    if not token:
+        return JsonResponse({'error': 'No token provided'}, status=400)
+    try:
+        password_token = Password_Tokens.objects.get(token=token)
+    except Password_Tokens.DoesNotExist:
+        return JsonResponse({'error': 'Invalid token'}, status=404)
+    if (timezone.now() < password_token.expiration_date):
+        return JsonResponse({'user': {'id': password_token.user_id}}, status=200)
+    else:
+        return JsonResponse({'error': 'Token is expired'}, status=400)

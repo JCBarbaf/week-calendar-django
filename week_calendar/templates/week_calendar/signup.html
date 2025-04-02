@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{% static 'week_calendar/style/base.css' %}">
   <link rel="stylesheet" href="{% static 'week_calendar/style/signup.css' %}">
   <link rel="shortcut icon" href="{% static 'week_calendar/images/icon.svg' %}" type="image/x-icon">
+  <script type="module" src="{% static 'week_calendar/scripts/password-visibility.js' %}"></script>
 </head>
 <body>
     <div class="signup-container">
@@ -34,22 +35,30 @@
                         {% endif %}
                         {% csrf_token %}
                         <div class="form-group">
-                            <label for="id_username" class="form-icon">
+                            <label for="id_email" class="form-icon">
                                 <img class="label-icon" src="{% static 'week_calendar/images/user-icon.svg' %}" alt="user-icon" title="Usuario">
                             </label>
                             {{ form.email }}
                         </div>
                         <div class="form-group">
-                            <label for="" class="form-icon">
+                            <label for="id_password" class="form-icon">
                                 <img class="label-icon" src="{% static 'week_calendar/images/password-icon.svg' %}" alt="password-icon" title="Contraseña">
                             </label>
                             {{ form.password }}
+                            <button class="visibility-psswd-button show">
+                                <img class="show visibility-psswd-icon" src="{% static 'week_calendar/images/show-icon.svg' %}" alt="show-psswd-icon" title="Mostrar contraseña">
+                                <img class="hide visibility-psswd-icon" src="{% static 'week_calendar/images/hide-icon.svg' %}" alt="hide-psswd-icon" title="Ocultar contraseña">
+                            </button>
                         </div>
                         <div class="form-group">
-                            <label for="id_username" class="form-icon">
-                                <img class="label-icon" src="{% static 'week_calendar/images/password-icon.svg' %}" alt="password-icon" title="Contraseña">
+                            <label for="id_repeat_password" class="form-icon">
+                                <img class="label-icon" src="{% static 'week_calendar/images/password-icon.svg' %}" alt="password-icon" title="Repetir contraseña">
                             </label>
                             {{ form.repeat_password }}
+                            <button class="visibility-psswd-button show">
+                                <img class="show visibility-psswd-icon" src="{% static 'week_calendar/images/show-icon.svg' %}" alt="show-psswd-icon" title="Mostrar contraseña">
+                                <img class="hide visibility-psswd-icon" src="{% static 'week_calendar/images/hide-icon.svg' %}" alt="hide-psswd-icon" title="Ocultar contraseña">
+                            </button>
                         </div>
                     </div>
                     <div class="signup-form-buttons">

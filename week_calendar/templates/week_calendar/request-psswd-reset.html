@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Juan Carlos Barba">
+  <title>Reestablecer contraseña - Calendario semanal</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'week_calendar/style/base.css' %}">
+  <link rel="stylesheet" href="{% static 'week_calendar/style/request-psswd-reset.css' %}">
+  <link rel="shortcut icon" href="{% static 'week_calendar/images/icon.svg' %}" type="image/x-icon">
+  <script type="module" src="{% static 'week_calendar/scripts/request-psswd-reset.js' %}"></script>
+</head>
+<body>
+    <div class="request-reset-container">
+        <div class="request-reset">
+            <header class="request-reset-header">
+                <h1>Reestablecer contraseña</h1>
+                <img class="logo" src="{% static 'week_calendar/images/logo-white.svg' %}" alt="calendar-logo" title="Calendar Logo">
+            </header>
+            <main class="request-reset-main">
+                <form class="request-reset-form active" action="{% url 'email_psswd_reset' %}" method="post">
+                    {% csrf_token %}
+                    <h4>Escribe tu email y te enviaremos instrucciones para restablecer la contraseña.</h4>
+                    <div class="form-group">
+                        <label for="id_email" class="form-icon">
+                            <img class="label-icon" src="{% static 'week_calendar/images/user-icon.svg' %}" alt="password-icon" title="Nueva contraseña">
+                        </label>
+                        <input type="email" name="email" id="id_email" placeholder="Email" autofocus required>
+                    </div>
+                    <div class="request-reset-buttons">
+                        <a class="login-button" href="{% url 'login' %}">Volver al login</a>
+                        <button type="submit" class="request-reset-button">Enviar Email</button>
+                    </div>
+                </form>
+                <div class="email-sended">
+                    <h3 class="email-sended-message">Hemos enviado un email a la cuenta de correo proporcionada. En caso de no haberlo recibido pruebe a solicitarlo de nuevo.</h3>
+                    <a class="login-button" href="{% url 'login' %}">Volver al login</a>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
